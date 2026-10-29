@@ -102,15 +102,22 @@
                   </label>
                 }
                 <button type="button"
-                  icon="pi pi-file-pdf"
-                  pButton (click)="printPdfMeeting()"
-                  label="Stampa Incontri"
+                  icon="pi pi-print"
+                  pButton (click)="printPdfCalendarioMeeting()"
+                  label="Calendario"
                   class="ui-button-success">
                 </button>
                 <button type="button"
-                  icon="pi pi-file-pdf"
+                  icon="pi pi-print"
+                  pButton (click)="printPdfMeeting()"
+                  label="Incontri"
+                  class="ui-button-success"
+                  style="margin-left: 5mm;">
+                </button>
+                <button type="button"
+                  icon="pi pi-print"
                   pButton (click)="printPdfClassification()"
-                  label="Stampa Classifica"
+                  label="Classifica"
                   class="ui-button-success"
                   style="margin-left: 5mm;">
                 </button>

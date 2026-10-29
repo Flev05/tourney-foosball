@@ -743,7 +743,7 @@ export class MeetingRoundService extends MeetingService {
     private printMeetingsByDirection(doc: jsPDF, meetings: MeetingDto[], startY: number, showTableHeader: boolean) {
         autoTable(doc, {
             head: [["Data", "N°", "In Casa", "P1", "P2", "Fuori Casa"]],
-            body: this.formatRoundData(meetings),
+            body: this.formatRoundData(meetings, true),
             startY: startY,
             margin: { top: 20, bottom: 20 },
             theme: 'striped',
@@ -801,7 +801,7 @@ export class MeetingRoundService extends MeetingService {
         });
     }
 
-    public formatRoundData(meetings: MeetingDto[]): any[] {
+    private formatRoundData(meetings: MeetingDto[], withMatches : boolean ): any[] {
         const tableRows: any[] = [];
         meetings.forEach((dto) => {
             // 1. Handle Separator Row
@@ -837,25 +837,460 @@ export class MeetingRoundService extends MeetingService {
 
             // 3. Handle Meeting Rows
             // We loop through matches and push a NEW row for each match
-            dto.meeting.matches.forEach(m => {
-                // If it's Ritorno, Team 2 is now the Home team
-                const matchNo = m.id + 1;
-                const teamHome = isRitorno ? dto.meeting.teamName2 : dto.meeting.teamName1;
-                const teamAway = isRitorno ? dto.meeting.teamName1 : dto.meeting.teamName2;
-                const scoreHome = isRitorno ? m.score2 : m.score1;
-                const scoreAway = isRitorno ? m.score1 : m.score2;
+            if( withMatches ) {
+                dto.meeting.matches.forEach(m => {
+                    // If it's Ritorno, Team 2 is now the Home team
+                    const matchNo = m.id + 1;
+                    const teamHome = isRitorno ? dto.meeting.teamName2 : dto.meeting.teamName1;
+                    const teamAway = isRitorno ? dto.meeting.teamName1 : dto.meeting.teamName2;
+                    const scoreHome = isRitorno ? m.score2 : m.score1;
+                    const scoreAway = isRitorno ? m.score1 : m.score2;
 
-                const row = [
-                    this.dateFormatPipe.transformWeek(dto.meeting.datetime),
-                    matchNo,
-                    teamHome,
-                    (scoreHome === 0 && scoreAway === 0) ? '' : scoreHome.toString(),
-                    (scoreHome === 0 && scoreAway === 0) ? '' : scoreAway.toString(),
-                    teamAway
-                ];
-                tableRows.push(row);
-            });
+                    const row = [
+                        this.dateFormatPipe.transformWeek(dto.meeting.datetime),
+                        matchNo,
+                        teamHome,
+                        (scoreHome === 0 && scoreAway === 0) ? '' : scoreHome.toString(),
+                        (scoreHome === 0 && scoreAway === 0) ? '' : scoreAway.toString(),
+                        teamAway
+                    ];
+                    tableRows.push(row);
+                });
+            }
         });
         return tableRows;
-    } 
+    }  
+    
+    private doPrintFullCalendar(doc: jsPDF, rounds: Round[], roundBaseName: string, directionLabel: string | null, fillpage: boolean) {
+        const pageHeight = doc.internal.pageSize.getHeight();
+
+        // 2. Stampa il calendario delle partite (Giornate)
+        let lastY = 25;
+        doc.setFontSize(20);
+
+        // Intestazione iniziale per la prima pagina del calendario
+        if (directionLabel) {
+            doc.text([this.selectedTourney.tourneyName, directionLabel], 14, 15);
+        } else {
+            doc.text(this.selectedTourney.tourneyName, 14, 15);          
+        }
+
+        for (let i = 0; i < rounds.length; i++) {
+            const r = rounds[i];
+            if (!fillpage) {
+                if (i > 0) {
+                    doc.addPage();
+                }
+                lastY = 25;
+                doc.setFontSize(20);
+                if (directionLabel) {
+                    doc.text([this.selectedTourney.tourneyName, directionLabel], 14, 15);
+                } else {
+                    doc.text(this.selectedTourney.tourneyName, 14, 15);
+                }
+            }
+
+            this.prepareMeetingsMap(r);
+            let currentRoundName = roundBaseName + " " + String.fromCharCode(65 + i);
+
+            for (let md = 1; md <= r.daysNo; md++) {
+                let meetingList: Meeting[] = (directionLabel == null || directionLabel === "Andata") 
+                    ? this.getOnewayMeetingsOfDay(md) 
+                    : this.getRoundtripMeetingsOfDay(md);
+
+                if (meetingList.length > 0) {
+                    let currentDayMeetings: any[] = [];
+                    const singleMeeting : Meeting[] = [];
+                    singleMeeting.push(meetingList[0]);
+                    if (directionLabel) {
+                        this.collectMeetingData(currentDayMeetings, singleMeeting, currentRoundName, `${directionLabel},`, md, r.daysNo);
+                    } else {
+                        this.collectMeetingData(currentDayMeetings, singleMeeting, currentRoundName, null, md, r.daysNo);
+                    }
+
+                    const estimatedTableHeight = 15 + (currentDayMeetings.length * 10);
+
+                    // Controllo dello spazio per l'impaginazione automatica
+                    if (lastY + estimatedTableHeight > pageHeight - 20) {
+                        doc.addPage(); 
+                        lastY = 25; 
+                        doc.setFontSize(20);
+                        
+                        if (directionLabel) {
+                            doc.text([this.selectedTourney.tourneyName, directionLabel], 14, 15);
+                        } else {
+                            doc.text(this.selectedTourney.tourneyName, 14, 15);
+                        }
+                    }
+
+                    const shouldShowHeader = (lastY === 25);
+                    this.printCalendarMeetingsByDirection(doc, currentDayMeetings, lastY, shouldShowHeader);
+                    
+                    const finalY = (doc as any).lastAutoTable?.finalY;
+                    lastY = (finalY ? finalY : lastY + estimatedTableHeight) + 10;
+                }
+            }
+        }
+    }
+
+    private printCalendarMeetingsByDirection(doc: jsPDF, meetings: MeetingDto[], startY: number, showTableHeader: boolean, roundTitle: string = "", dateRange: string = "") {
+        autoTable(doc, {
+            head: [[roundTitle, dateRange, "Giorno", "Data", "Ora", "Location"]],
+            body: this.formatRoundData(meetings, false),
+            startY: startY,
+            margin: { top: 20, bottom: 20 },
+            theme: 'striped',
+            showHead: showTableHeader ? 'everyPage' : false, 
+            rowPageBreak: 'avoid', 
+            
+            // Styles the general look of the header
+            headStyles: {
+                fillColor: [240, 240, 240], // Light background matching standard tables or custom
+                textColor: 0,
+                fontStyle: 'bold',
+                lineWidth: 0.1,
+                lineColor: [200, 200, 200]
+            },
+
+            // Styles the columns for both Head and Body
+            columnStyles: {
+                0: { halign: 'left', cellWidth: 'auto' },  // In Casa (Home Team)
+                1: { halign: 'center', cellWidth: 8 },     // "-" separator
+                2: { halign: 'left', cellWidth: 'auto' },  // Fuori Casa (Away Team)
+                3: { halign: 'center', cellWidth: 15 },    // Giorno (Day)
+                4: { halign: 'center', cellWidth: 22 },    // Data (Date)
+                5: { halign: 'center', cellWidth: 15 },    // Ora (Time)
+                6: { halign: 'left', cellWidth: 'auto' }   // Location / Campo
+            },
+
+            styles: { minCellHeight: 10, fontSize: 10 },
+            
+            didParseCell: (data) => {
+                // Optional custom cell adjustments during parsing if needed
+            }
+        });
+    }
+
+    private printPdfCalendaMeeting(selectedTourney: Tourney, rounds: Round[], both: boolean, roundName: string) {
+        const doc = new jsPDF();
+        this.selectedTourney = selectedTourney;
+        if( both ) {
+            this.doPrintFullCalendar(doc, rounds, roundName, "Andata", false);
+        } else {
+            this.doPrintFullCalendar(doc, rounds, roundName, null, false);
+        }
+        if (both) {
+            doc.addPage(); // Start Away meetings on a fresh page
+            this.doPrintFullCalendar(doc, rounds, roundName, "Ritorno", false);
+        }
+        doc.save(`Calendar-${roundName}-${this.selectedTourney.tourneyName}.pdf`);
+    }
+
+    public printPdfCalendarMeetings(selectedTourney: Tourney): void {
+        const doc = new jsPDF({
+            orientation: 'landscape',
+            unit: 'mm',
+            format: 'a4'
+        });
+        const pageWidth = doc.internal.pageSize.getWidth();
+        const pageHeight = doc.internal.pageSize.getHeight();
+        const margin = {
+            left: 10,
+            right: 10,
+            top: 10,
+            bottom: 12
+        };
+        const italianMonths = [
+            'Gennaio', 'Febbraio', 'Marzo', 'Aprile',
+            'Maggio', 'Giugno', 'Luglio', 'Agosto',
+            'Settembre', 'Ottobre', 'Novembre', 'Dicembre'
+        ];
+        const italianWeekdays = [
+            'Dom', 'Lun', 'Mar', 'Mer', 'Gio', 'Ven', 'Sab'
+        ];
+        const ordinal = (n: number): string => {
+            return `${n}ª`;
+        };
+
+        const formatDate = (value: Date | string): string => {
+            const date = new Date(value);
+            if (isNaN(date.getTime())) {
+                return '';
+            }
+            const day = String(date.getDate()).padStart(2, '0');
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const year = date.getFullYear();
+            return `${day}/${month}/${year}`;
+        };
+
+        const formatTime = (value: Date | string): string => {
+            const date = new Date(value);
+            if (isNaN(date.getTime())) {
+                return '';
+            }
+            return `${String(date.getHours()).padStart(2, '0')}:${
+                String(date.getMinutes()).padStart(2, '0')
+            }`;
+        };
+
+        const getDate = (meeting: Meeting): Date | null => {
+            if (!meeting.datetime) {
+                return null;
+            }
+            const date = new Date(meeting.datetime);
+            return isNaN(date.getTime()) ? null : date;
+        };
+
+        // Try to find a venue/location in an object without assuming
+        // a particular Team or Match property name.
+        const getLocationFromObject = (obj: unknown): string => {
+            if (!obj || typeof obj !== 'object') {
+                return '';
+            }
+            const item = obj as Record<string, unknown>;
+            const possibleFields = [
+                'location',
+                'venue',
+                'field',
+                'court',
+                'address',
+                'place',
+                'campo',
+                'indirizzo'
+            ];
+
+            for (const field of possibleFields) {
+                const value = item[field];
+                if (typeof value === 'string' && value.trim()) {
+                    return value.trim();
+                }
+                if (value && typeof value === 'object') {
+                    const nested = value as Record<string, unknown>;
+                    for (const nestedField of [
+                        'name',
+                        'description',
+                        'address',
+                        'location'
+                    ]) {
+                        const nestedValue = nested[nestedField];
+                        if (
+                            typeof nestedValue === 'string' &&
+                            nestedValue.trim()
+                        ) {
+                            return nestedValue.trim();
+                        }
+                    }
+                }
+            }
+            return '';
+        };
+
+        const getTeamLocation = (teamName: string | null): string => {
+            if (!teamName) {
+                return '';
+            }
+            const team = selectedTourney.teams.find(
+                t => t.teamName?.trim().toUpperCase() === teamName.trim().toUpperCase()
+            );
+            const address = team?.address + ' - ' 
+                + team?.country.zipCode + ' ' 
+                + team?.country.city 
+                + ' (' + team?.country.provinceCode + ')';
+            return address;
+        };
+
+        const getMeetingLocation = (meeting: Meeting): string => {
+            return getTeamLocation(meeting.teamName1);
+        };
+
+        const getDateRange = (meetings: Meeting[]): string => {
+            const dates = meetings
+                .map(getDate)
+                .filter((d): d is Date => d !== null)
+                .sort((a, b) => a.getTime() - b.getTime());
+            if (dates.length === 0) {
+                return '';
+            }
+            const first = dates[0];
+            const last = dates[dates.length - 1];
+            const firstDay = first.getDate();
+            const lastDay = last.getDate();
+            const firstMonth = italianMonths[first.getMonth()];
+            const lastMonth = italianMonths[last.getMonth()];
+            if (
+                first.getMonth() === last.getMonth() &&
+                first.getFullYear() === last.getFullYear()
+            ) {
+                return `dal ${firstDay} al ${lastDay} ${lastMonth}`;
+            }
+
+            if (first.getFullYear() === last.getFullYear()) {
+                return `dal ${firstDay} ${firstMonth} al ${lastDay} ${lastMonth}`;
+            }
+            return `dal ${firstDay} ${firstMonth} ${first.getFullYear()} al ${
+                lastDay
+            } ${lastMonth} ${last.getFullYear()}`;
+        };
+
+        // Main tournament heading.
+        const printMainHeading = (): number => {
+            doc.setFont('helvetica', 'bold');
+            doc.setFontSize(16);
+            doc.text(
+                selectedTourney.tourneyName,
+                margin.left,
+                12,
+                { maxWidth: pageWidth - margin.left - margin.right }
+            );
+            doc.setFontSize(12);
+            const category = (
+                selectedTourney as Tourney & {
+                    categoryName?: string;
+                }
+            ).categoryName;
+            const subtitle = category
+                ? `CATEGORIA ${category}`
+                : '';
+            if (subtitle) {
+                doc.text(subtitle, margin.left, 19);
+                return 25;
+            }
+            return 22;
+        };
+
+        let lastY = printMainHeading();
+        const rounds = selectedTourney.roundVO?.rounds ?? [];
+
+        const calendars: {
+            meetings: Meeting[];
+            directionLabel: string;
+        }[] = [];
+
+        for (const round of rounds) {
+            // Always print the first-leg calendar when it contains meetings.
+            const onewayMeetings = round.onewayMeetings ?? [];
+            if (onewayMeetings.length > 0) {
+                calendars.push({
+                    meetings: onewayMeetings,
+                    directionLabel: 'Andata'
+                });
+            }
+            // Print the return-leg calendar only when it contains meetings.
+            const roundtripMeetings = round.roundtripMeetings ?? [];
+            if (roundtripMeetings.length > 0) {
+                calendars.push({
+                    meetings: roundtripMeetings,
+                    directionLabel: 'Ritorno'
+                });
+            }
+        }
+
+        for (const calendar of calendars) {
+            const meetings = calendar.meetings;
+            const directionLabel = calendar.directionLabel;
+                // Start the Ritorno calendar on a new page.
+            if (directionLabel === 'Ritorno') {
+                doc.addPage();
+                lastY = printMainHeading();
+            }
+            // Group meetings by match day.
+            const meetingsByDay = new Map<number, Meeting[]>();
+
+            for (const meeting of meetings) {
+                const day = meeting.day ?? 1;
+                if (!meetingsByDay.has(day)) {
+                    meetingsByDay.set(day, []);
+                }
+                meetingsByDay.get(day)!.push(meeting);
+            }
+            const days = Array.from(meetingsByDay.keys()).sort((a, b) => a - b);
+            for (const day of days) {
+                const dayMeetings = meetingsByDay.get(day)!;
+                dayMeetings.sort((a, b) => {
+                    const dateA = getDate(a)?.getTime() ?? 0;
+                    const dateB = getDate(b)?.getTime() ?? 0;
+                    return dateA - dateB;
+                });
+                // Keep the day heading with its table when possible.
+                if (lastY + 25 > pageHeight - margin.bottom) {
+                    doc.addPage();
+                    lastY = printMainHeading();
+                }
+                doc.setFont('helvetica', 'bold');
+                doc.setFontSize(11);
+                const roundTitle = `${ordinal(day)} Giornata ${directionLabel}`;
+                doc.text(roundTitle, margin.left, lastY);
+                doc.setFont('helvetica', 'normal');
+                doc.setFontSize(10);
+                doc.text(
+                    getDateRange(dayMeetings),
+                    margin.left + 55,
+                    lastY
+                );
+                lastY += 3;
+                const body = dayMeetings.map(meeting => {
+                    const date = getDate(meeting);
+                    const weekday = date
+                        ? italianWeekdays[date.getDay()]
+                        : '';
+                    return [
+                        meeting.teamName1 ?? '',
+                        '-',
+                        meeting.teamName2 ?? '',
+                        weekday,
+                        date ? formatDate(date) : '',
+                        date ? formatTime(date) : '',
+                        getMeetingLocation(meeting)
+                    ];
+                });
+                autoTable(doc, {
+                    startY: lastY,
+                    margin: {
+                        left: margin.left,
+                        right: margin.right,
+                        top: margin.top,
+                        bottom: margin.bottom
+                    },
+                    head: [[
+                        'Squadra 1',
+                        '',
+                        'Squadra 2',
+                        'Giorno',
+                        'Data',
+                        'Ora',
+                        'Location'
+                    ]],
+                    body,
+                    theme: 'plain',
+                    styles: {
+                        font: 'helvetica',
+                        fontSize: 8,
+                        cellPadding: 1.5,
+                        overflow: 'linebreak',
+                        valign: 'middle',
+                        lineWidth: 0
+                    },
+                    headStyles: {
+                        fontStyle: 'bold',
+                        textColor: [0, 0, 0]
+                    },
+                    columnStyles: {
+                        0: { cellWidth: 48 },
+                        1: { cellWidth: 5, halign: 'center' },
+                        2: { cellWidth: 48 },
+                        3: { cellWidth: 15, halign: 'center' },
+                        4: { cellWidth: 23, halign: 'center' },
+                        5: { cellWidth: 15, halign: 'center' },
+                        6: { cellWidth: 'auto' }
+                    },
+                    rowPageBreak: 'avoid',
+                    showHead: 'everyPage'
+                });
+                lastY = ((doc as jsPDF & { lastAutoTable?: { finalY: number };}).lastAutoTable?.finalY ?? lastY) + 7;
+            }
+        }
+        // Save the generated PDF.
+        const safeName = selectedTourney.tourneyName.trim().replace(/[\\/:*?"<>|]+/g, '_');
+        doc.save(`Calendar_${safeName || 'Meetings'}.pdf`);
+    }
 }

@@ -42,6 +42,7 @@ export class TeamMatchesComponent implements OnInit {
                 rounds.push(r);
             }
         }
+        this.teamName = this.teamName.replace("*","").trim();
         for (let r of rounds) {
             this.meetingRoundService.prepareMeetingsMap(r);
             for( let md = 1; md <= r.daysNo; md ++ ) {

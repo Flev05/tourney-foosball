@@ -180,17 +180,12 @@ public class UserRoleClientRESTService extends AbstractRESTService {
 			userDao.insert(upo);
 		}
 		urcpo = new UserRoleClient();
-		urcpo.setAvailable(false);
 		urcpo.setClient(cpo);
 		urcpo.setUser(upo);
 		urcpo.setTourney(tpo);
 		Role rpo = roleDao.getOperatorRole();
 		urcpo.setRole(rpo);
 		urcDao.insert(urcpo);
-
-		// tpo.getUrcs().add(urcpo);
-		// upo.getUrcSet().add(urcpo);
-		// rpo.getUrcSet().add(urcpo);
 
 		Response.ResponseBuilder builder = Response.ok(urcvo);
 
@@ -205,7 +200,6 @@ public class UserRoleClientRESTService extends AbstractRESTService {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response mergeOperators(OperatorsVO urcvo) {
-
 		log.debug(logId() + "POST: mergeOperators(" + urcvo.getClientId() + "/" + urcvo.getTourneyId() + ")");
 
 		Integer tourneyId = urcvo.getTourneyId();
@@ -220,14 +214,13 @@ public class UserRoleClientRESTService extends AbstractRESTService {
 			throw new WebApplicationException(Response.Status.NOT_FOUND);
 		}
 
-		List<UserRoleClient> urcList = urcDao.findAllOperatorsOf(urcvo.getClientId(), tourneyId);
-		for (UserRoleClient urc : urcList) {
-			urc.setAvailable(true);
-			urcDao.update(urc);
-		}
+//		List<UserRoleClient> urcList = urcDao.findAllOperatorsOf(urcvo.getClientId(), tourneyId);
+//		for (UserRoleClient urc : urcList) {
+//			urcDao.update(urc);
+//		}
+		
 		for (UserVO uvo : urcvo.getSelectedOperators()) {
 			UserRoleClient urc = urcDao.getOperator(uvo.getUsername(), urcvo.getClientId(), tourneyId);
-			urc.setAvailable(false);
 			urcDao.update(urc);
 		}
 

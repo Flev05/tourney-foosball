@@ -253,6 +253,10 @@ export class TabResultListView extends AbstractTabResultListView {
         console.log("Entering regenerateB()");
     }
 
+    public printPdfCalendarioMeeting() {
+        this.meetingRoundService.printPdfCalendarMeetings(this.selectedTourney)
+    }
+    
     public printPdfMeeting() {
         this.meetingRoundService.printPdfMeeting(this.selectedTourney)
     }

@@ -46,6 +46,8 @@ build.metadata
 **/.gradle/
 **/.idea/
 **/.tern-project
+**/.angular/
+**/.vscode/
 **/RemoteSystemsTempFiles/
 **/Servers/
 **/.checkstyle

@@ -53,10 +53,10 @@ export class LoginDetailView extends AbstractListView {
             ,   router 
             ,   location);
             
-            this.loginformGroup = new FormGroup({
-                username: new FormControl('', Validators.required),
-                password: new FormControl('', Validators.required)
-            });
+        this.loginformGroup = new FormGroup({
+            username: new FormControl('', Validators.required),
+            password: new FormControl('', Validators.required)
+        });
     }
 
     override ngOnInit() {

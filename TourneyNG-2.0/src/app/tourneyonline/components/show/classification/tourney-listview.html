@@ -22,8 +22,7 @@
 </div>
 
 <p-table [columns]="cols"
-  [value]="rows"
-  responsiveLayout="scroll"
+  [value]="tourneyList"
   selectionMode="single"
   [(selection)]="selectedRow"
   (onRowSelect)="onRowSelect($event)" >

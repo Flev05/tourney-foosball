@@ -1,6 +1,7 @@
 export interface TableCols
 {
-    header : string;
-    field  : string;
-    style? : string;
+    header  : string;
+    field   : string;
+    style?  : string;
+    asd?    : string;
 }

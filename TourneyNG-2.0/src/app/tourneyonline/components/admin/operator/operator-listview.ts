@@ -110,7 +110,6 @@ export class OperatorListView extends AbstractListView {
 
     private onLoadNext(op: OperatorsVO): void {
         this.operatorRows = op.allOperators;
-        this.selectedOperatorRows = op.selectedOperators;
     }
 
     private loadUsersErrorHandler<T> (operation = 'operation', result?: T) {

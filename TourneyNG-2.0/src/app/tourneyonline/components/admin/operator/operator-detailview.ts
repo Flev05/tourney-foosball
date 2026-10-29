@@ -17,7 +17,7 @@ import { TeamService } from 'app/tourneyonline/service/team-service';
 import { Team } from 'app/tourneyonline/domain/team';
 
 const DEFAULT_OPERATOR_PASSWORD: string = "torneionline";
-const REDIRECT_TOURNEY_DV   = 'adminoperator/dv';
+const REDIRECT_TOURNEY_DV = 'adminoperator/dv';
 
 @Component({
     templateUrl: './operator-detailview.html',
@@ -30,6 +30,11 @@ export class OperatorDetailView extends UserDetailView {
     selectedTeams: Team[] = [];
     teams: Team[] = [];
     
+    filteredUsersSingle: UserVO[] = [];
+
+    searchQuery: string = '';
+    selectedUserToAdd: any = null;
+
     constructor(
         protected override tourneyService: TourneyService,
         protected override userService: UserService,
@@ -51,7 +56,6 @@ export class OperatorDetailView extends UserDetailView {
             );
     }
 
-    // @Override
     override ngOnInit() {
         super.ngOnInit();
         this.selectedTourney = this.tourneyService.selectedTourney;
@@ -63,6 +67,11 @@ export class OperatorDetailView extends UserDetailView {
                 }
             }
         }
+        this.selectedUserToAdd = this.selectedUser;
+        let loggedUserId = this.loginService.userLogged.id;
+        this.loggedUsername = this.loginService.userLogged.username;
+        const subscriber = this.userService.loadAllUsers(loggedUserId, this.saveUserErrorHandler('loadAllUsers()'));
+        subscriber.subscribe(cs => { this.userService.users = cs; }, e => this.onError(e));
     }
 
     protected override setPasswords() {
@@ -90,19 +99,16 @@ export class OperatorDetailView extends UserDetailView {
         return rvo;
     }
   
-    // @Override
     protected override createUserAndUrc(urc: UserRoleClientVO) {
         urc.tourneyId = this.selectedTourney.id;
         const subscriber = this.urcService.insertUrcOperator(urc, this.saveUserErrorHandler('Create Operator operation'));
         return subscriber;
     }
     
-    // @Override
     protected override createUrc(urc: UserRoleClientVO) {
         return this.createUserAndUrc(urc);
     }
 
-    // @Override
     protected override prepareUrcVO(existingUser: UserVO, rvo: RoleVO): UserRoleClientVO {
         let urc = new UserRoleClientVO();
         urc.userVo = existingUser;
@@ -112,18 +118,15 @@ export class OperatorDetailView extends UserDetailView {
         return urc;
     }
 
-    // @Override
     protected override onUpdateNext(cs: UserVO): void {
         console.log("Entering onUpdateNext()");
         this.updateOpList(cs.username);
         this.goBack();
     }
 
-    // @Override
     protected override onSaveComplete( urc : UserRoleClientVO ) {
         console.log("Entering onSaveComplete()");
         this.userService.newUser = false;
-        this.tourneyService.operatorVo.selectedOperators.push(urc.userVo);
         this.tourneyService.operatorVo.allOperators.push(urc.userVo);
         this.updateOpList(urc.userVo.username);
         if( !this.onSaveUserError ) {
@@ -153,5 +156,38 @@ export class OperatorDetailView extends UserDetailView {
                 }
             }
         }
+    }
+    
+    searchUser(event : any) {
+        const query = event.query.toUpperCase();
+        this.filteredUsersSingle = this.userService.users.filter(u =>
+            u.username.toUpperCase().includes(query)
+        );       
+    }
+
+    override enableSaveButton() : string {
+        if( !this.selectedUserToAdd ) {
+            return "disabled";
+        }
+        if (typeof this.selectedUserToAdd === 'object') { // CASE 1: User selected an existing UserVO object
+            this.selectedUser = this.selectedUserToAdd;
+            let un = this.selectedUser.username;
+            let userEnable:   boolean = un?.trim() == "";
+            let fn = this.selectedUser.firstname == undefined ? "" : this.selectedUser.firstname;
+            let ln = this.selectedUser.lastname == undefined ? "" : this.selectedUser.lastname;
+            let upn = this.selectedUser.phoneNumber == undefined ? "" : this.selectedUser.phoneNumber;
+            let uem = this.selectedUser.email == undefined ? "" : this.selectedUser.email ;
+            let uad = this.selectedUser.address == undefined ? "" : this.selectedUser.address;
+            userEnable = userEnable || fn.trim() == "" || ln.trim() == "" || upn.trim() == "" || uem.trim() == "" || uad.trim() == "";
+            return userEnable ? "disabled" : "";
+        } else { // CASE 2: User typed a new name (string)
+            const typedName = (this.selectedUserToAdd as string).trim();
+            if (!typedName) {
+                return "disabled";
+            }
+            this.selectedUserToAdd = new UserVO();
+            this.selectedUserToAdd.username = typedName;
+        } 
+        return "disabled";
     }
 }

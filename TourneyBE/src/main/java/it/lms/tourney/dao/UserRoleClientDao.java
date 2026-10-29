@@ -276,13 +276,12 @@ public class UserRoleClientDao extends BaseJPACrudDao<UserRoleClient, Integer> {
 		Join<UserRoleClient, Client> clientJoin = root.join(UserRoleClient_.client);
 		Join<UserRoleClient, Role> roleJoin = root.join(UserRoleClient_.role);
 
-		Predicate p1 = cb.equal(root.get(UserRoleClient_.available), available);
 		Predicate p2 = cb.equal(tourneyJoin.get(Tourney_.id), tourneyId);
 		Predicate p3 = cb.equal(clientJoin.get(Client_.id), clientId);
 		Predicate p4 = cb.equal(roleJoin.get(Role_.name), Role.ROLES.OPERATOR.name());
 
 		cq = cq.select(root);
-		cq = cq.where(p1, p2, p3, p4);
+		cq = cq.where(p2, p3, p4);
 
 		TypedQuery<UserRoleClient> nq = getEm().createQuery(cq);
 
@@ -672,7 +671,6 @@ public class UserRoleClientDao extends BaseJPACrudDao<UserRoleClient, Integer> {
 			return urc;
 		}
 		urc = new UserRoleClient();
-		urc.setAvailable(true);
 		urc.setUser(upo);
 		urc.setClient(cpo);
 		urc.setTourney(tpo);
@@ -684,7 +682,6 @@ public class UserRoleClientDao extends BaseJPACrudDao<UserRoleClient, Integer> {
 
 	public UserRoleClient cloneUrcAvailableOperator(UserRoleClient urc, Tourney tpo) {
 		UserRoleClient clonedUrc = new UserRoleClient();
-		clonedUrc.setAvailable(urc.getAvailable());
 		clonedUrc.setUser(urc.getUser());
 		clonedUrc.setClient(urc.getClient());
 		clonedUrc.setTourney(tpo);

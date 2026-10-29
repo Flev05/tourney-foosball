@@ -171,7 +171,7 @@ export class TourneyListView extends AbstractTourneyListView {
             let index: number = this.tourneys.indexOf(deletedTourney);
             if(index > -1) {
                 this.tourneys.splice(index, 1);
-                this.rows.splice(index, 1);
+                this.tourneyList.splice(index, 1);
             }
         }
     }

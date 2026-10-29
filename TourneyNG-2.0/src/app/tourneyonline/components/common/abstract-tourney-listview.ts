@@ -21,7 +21,7 @@ export abstract class AbstractTourneyListView extends AbstractListView {
     tdbs : TourneyVO[] = [];
 
     cols: TableCols[] = [];
-    rows: any[] = [];
+    tourneyList: any[] = [];
     selectedRow: any;
 
     constructor(protected override redirect: string
@@ -76,8 +76,6 @@ export abstract class AbstractTourneyListView extends AbstractListView {
 
         this.tourneys = this.tourneyService.sort(this.tourneys);
 
-        // this.tourneys = this.filter(this.tourneys);
-
         let emptyCountry = {
             id : 0,
             city : "",
@@ -87,15 +85,16 @@ export abstract class AbstractTourneyListView extends AbstractListView {
             countryCode  : ""
         };
 
-        this.rows = [];
+        this.tourneyList = [];
         for(let i=0;i<this.tourneys.length; i++) {
             let t = this.tourneys[i];
-            this.rows.push({id: t.id
+            this.tourneyList.push({id: t.id
                 , tourneyName: t.tourneyName
                 , location: t.country==null ? emptyCountry : t.country.city
                 , calendar: t.calendar==null ? "No PDF" : t.calendar
             });
         }
+        this.tourneyList = this.tourneyService.sort(this.tourneyList);
     }
 
     // protected abstract filter(tourneys: Tourney[]): Tourney[];

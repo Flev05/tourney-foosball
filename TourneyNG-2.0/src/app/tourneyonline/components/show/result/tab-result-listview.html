@@ -114,12 +114,18 @@
                 }
                 <button type="button"
                   icon="pi pi-file-pdf"
+                  pButton (click)="printPdfCalendarioMeeting()"
+                  label="Stampa Calendario"
+                  class="p-button-outlined">
+                </button>
+                <button type="button"
+                  icon="pi pi-file-pdf"
                   pButton (click)="printPdfMeeting()"
                   label="Stampa Incontri"
                   class="p-button-outlined">
                 </button>
                 <button type="button"
-                  icon="pi pi-file-pdf"
+                  icon="pi pi-print"
                   pButton (click)="printPdfClassification()"
                   label="Stampa Classifica"
                   class="p-button-outlined">

@@ -13,17 +13,13 @@ public class CommonUserVO extends AbstractVO {
 
     private String            username;
     private String            password;
-
     private String            firstname;
     private String            lastname;
-
     private String            address;
     private String            email;
     private String            phoneNumber;
-
+    private String            asd;
     private String            description;
-    private String            disabled;
-
     private Country           country;
 
     public CommonUserVO() {

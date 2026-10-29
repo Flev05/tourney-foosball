@@ -145,25 +145,18 @@
         </div>
       }
     </div>
-
+    
     <div class="layout-menu">
       @if (!loginService.isUserLogged) {
-        <a (click)="toggleMenu('auth')"
-          [class.active-menuitem]="activeMenuId === 'auth'"
-          class="text-color-secondary no-underline hover:text-primary transition-colors">
+        <a routerLink="/login" 
+          (click)="menuActive = false"
+          class="text-color-secondary no-underline hover:text-primary transition-colors flex align-items-center gap-2">
           <i class="pi pi-sign-in"></i>
           <span class="font-medium text-color">Login</span>
         </a>
-        @if (activeMenuId === 'auth') {          
-          <div>
-            <a routerLink="/login" (click)="menuActive=false">
-              <i class="pi pi-sign-in"></i>
-              Login
-            </a>
-          </div>
-        }
       }
 
+      <!-- ================= RESULTS ================= -->
       @if (loginService.isUserLogged) {
         <a (click)="toggleMenu('auth')"
           [class.active-menuitem]="activeMenuId === 'auth'"

@@ -95,12 +95,6 @@ public class UserRESTService extends AbstractRESTService {
 		ovo.setClientId(clientId);
 		ovo.setTourneyId(tourneyId);
 
-		List<UserRoleClient> urcList = urcDao.findAvailableOperatorsOf(clientId, tourneyId, false);
-		for (UserRoleClient urc : urcList) {
-			UserVO uvo = converter.convertUserPoVo(urc.getUser());
-			ovo.getSelectedOperators().add(uvo);
-		}
-
 		List<User> opList = urcDao.findDistinctOperators(clientId, tourneyId);
 		for (User op : opList) {
 			UserVO uvo = converter.convertUserPoVo(op);

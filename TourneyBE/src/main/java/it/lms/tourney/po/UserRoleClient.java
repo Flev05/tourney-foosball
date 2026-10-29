@@ -3,7 +3,6 @@ package it.lms.tourney.po;
 
 import java.util.Objects;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -48,13 +47,10 @@ public class UserRoleClient extends AbstractPO {
 	@JoinColumn(name = "tourney_id")
 	private Tourney tourney;
 
-	@Column(name = "available")
-	private Boolean available;
-
 	@Override
 	public String toString() {
 		return super.toString() + " UserRoleClient [user=" + user.getUsername() + ", role=" + role.getName()
-				+ ", client=" + client.getBusinessName() + ", available=" + available + "]";
+				+ ", client=" + client.getBusinessName()   + "]";
 	}
 
 	@Override
